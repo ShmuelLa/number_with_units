@@ -17,6 +17,6 @@ TEST_CASE("Right Calculation") {
     NumberWithUnits::read_units(units_file);
     NumberWithUnits distance(5,"km");
     NumberWithUnits weight(5,"kg");
-    CHECK((distance*2) == ("10[km]"));
-    CHECK((weight*2) == ("10[kg]"));
+    CHECK(to_string(distance*2) == ("10[km]"));
+    CHECK(to_string(weight*2) == ("10[kg]"));
 }
