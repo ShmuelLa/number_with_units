@@ -15,6 +15,18 @@ namespace ariel {
         NumberWithUnits result(1, "km");
         return result;
     }
+    NumberWithUnits & NumberWithUnits::operator-- () {
+        return *this;
+    }
+    NumberWithUnits & NumberWithUnits::operator++ () {
+        return *this;
+    }
+    NumberWithUnits NumberWithUnits::operator-- (int) {
+        return *this;
+    }
+    NumberWithUnits NumberWithUnits::operator++ (int) {
+        return *this;
+    }
     NumberWithUnits NumberWithUnits::operator- (NumberWithUnits &other_num) {
         NumberWithUnits result(1, "km");
         return result;
@@ -27,16 +39,28 @@ namespace ariel {
         NumberWithUnits result(1, "km");
         return result;
     }
-    bool NumberWithUnits::operator> (NumberWithUnits &other_num) {
+    bool NumberWithUnits::operator> (const NumberWithUnits &other_num) const {
         return true;
     }
-    bool NumberWithUnits::operator== (const NumberWithUnits &other_num) {
+    bool NumberWithUnits::operator< (const NumberWithUnits &other_num) const {
         return true;
     }
-    bool NumberWithUnits::operator<= (NumberWithUnits &other_num) {
+    bool NumberWithUnits::operator== (const NumberWithUnits &other_num) const {
+        return true;
+    }
+    bool NumberWithUnits::operator<= (const NumberWithUnits &other_num) const {
+        return true;
+    }
+    bool NumberWithUnits::operator>= (const NumberWithUnits &other_num) const {
+        return true;
+    }
+    bool NumberWithUnits::operator!= (const NumberWithUnits &other_num) const {
         return true;
     }
     NumberWithUnits& NumberWithUnits::operator+= (const NumberWithUnits &num) {
+        return *this;
+    }
+    NumberWithUnits& NumberWithUnits::operator-= (const NumberWithUnits &num) {
         return *this;
     }
     NumberWithUnits NumberWithUnits::operator* (double factor) {
