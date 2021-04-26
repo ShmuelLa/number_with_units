@@ -3,9 +3,9 @@ using namespace::std;
 using namespace::ariel;
 
 int test1() {
-    map <string, map <string, double> > units_map2;
+    map <string, map <string, long double> > units_map2;
     string unit1, unit2;
-    double amount;
+    long double amount;
     ifstream in_file("units.txt");
 
     if (!in_file) {
@@ -29,19 +29,19 @@ int test1() {
         }
     }
     cout << "==========================" << endl;
-    for (map <string, map<string, double>>::iterator it = units_map2.begin(); it != units_map2.end(); ++it) {
+    for (map <string, map<string, long double>>::iterator it = units_map2.begin(); it != units_map2.end(); ++it) {
         cout << it->first;
-        map <string,double> internal_map = it->second;
-        for (map<string, double>::iterator it2 = internal_map.begin(); it2 != internal_map.end(); ++it2) {
+        map <string,long double> internal_map = it->second;
+        for (map<string, long double>::iterator it2 = internal_map.begin(); it2 != internal_map.end(); ++it2) {
             cout << " <" << it2->first << " , " << it2->second << " >" << endl;
         }
     }
     cout << "==========================" << endl;
     /**
-    for (map <string, map<string, double>>::iterator it = units_map2.begin(); it != units_map2.end(); ++it) {
-        map <string,double> internal_map = it->second;
-        for (map<string, double>::iterator it2 = internal_map.begin(); it2 != internal_map.end(); ++it2) {
-            for (map <string, map<string, double>>::iterator it3 = units_map2.begin(); it3 != units_map2.end(); ++it3) {
+    for (map <string, map<string, long double>>::iterator it = units_map2.begin(); it != units_map2.end(); ++it) {
+        map <string,long double> internal_map = it->second;
+        for (map<string, long double>::iterator it2 = internal_map.begin(); it2 != internal_map.end(); ++it2) {
+            for (map <string, map<string, long double>>::iterator it3 = units_map2.begin(); it3 != units_map2.end(); ++it3) {
                 if (it3->first == it2->first) {
                     cout << it3->first << "  " << it2->second << "| " << it2->first << " " << endl;
                 }

@@ -11,15 +11,15 @@ using std::ostream;
 using std::istream;
 
 namespace ariel {
-    static map <string, map <string, double>> units_map;
-    const static double epsilon = 0.00001;
+    static map <string, map <string, long double>> units_map;
+    const static long double epsilon = 0.00001;
 
     class NumberWithUnits {
         private:
-            pair <double, string> _unit;
+            pair <long double, string> _unit;
 
         public:
-            NumberWithUnits(double amount, string unit_type);
+            NumberWithUnits(long double amount, string unit_type);
 		    static void read_units(ifstream &file_name);
             NumberWithUnits operator- () const;
             NumberWithUnits operator+ () const;
@@ -37,8 +37,8 @@ namespace ariel {
             bool operator!= (const  NumberWithUnits &other_num) const;
             NumberWithUnits& operator+= (const NumberWithUnits &num);
             NumberWithUnits& operator-= (const NumberWithUnits &num);
-            NumberWithUnits operator* (double factor);
-            friend NumberWithUnits operator* (double factor, const NumberWithUnits);
+            NumberWithUnits operator* (long double factor);
+            friend NumberWithUnits operator* (long double factor, const NumberWithUnits);
             friend ostream& operator<< (ostream& stream, const NumberWithUnits& num);
             friend istream& operator>> (istream& stream, const NumberWithUnits& num);
 	};

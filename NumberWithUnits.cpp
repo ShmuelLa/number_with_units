@@ -4,7 +4,7 @@ using namespace::std;
 
 namespace ariel {
 
-    NumberWithUnits::NumberWithUnits(double amount, string unit_type) {
+    NumberWithUnits::NumberWithUnits(long double amount, string unit_type) {
         if (units_map.count(unit_type) == 0) {
             throw("This unit does not exist!");
         }
@@ -16,7 +16,7 @@ namespace ariel {
 
     void NumberWithUnits::read_units(ifstream &file_name) {
         string unit1, unit2;
-        double amount;
+        long double amount;
         while (!file_name.fail() && !file_name.eof() ) {
             file_name >> unit1;
             if (unit1 == "1") {
@@ -65,11 +65,11 @@ namespace ariel {
 
     NumberWithUnits NumberWithUnits::operator- (NumberWithUnits &other_num) {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first - other_num._unit.first;
+            long double sum = _unit.first - other_num._unit.first;
             return NumberWithUnits(sum, _unit.second);
         }
         if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1) {
-            double sum = _unit.first - other_num._unit.first;
+            long double sum = _unit.first - other_num._unit.first;
             return NumberWithUnits(sum, _unit.second);   
         }
         else {
@@ -86,11 +86,11 @@ namespace ariel {
 
     NumberWithUnits NumberWithUnits::operator+ (NumberWithUnits &other_num) {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
+            long double sum = _unit.first + other_num._unit.first;
             return NumberWithUnits(sum, _unit.second);
         }
         if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1) {
-            double sum = _unit.first + (other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
+            long double sum = _unit.first + (other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
             return NumberWithUnits(sum, _unit.second);   
         }   
         else {
@@ -102,7 +102,7 @@ namespace ariel {
 
     bool NumberWithUnits::operator> (const NumberWithUnits &other_num) const {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
+            long double sum = _unit.first + other_num._unit.first;
             return (_unit.first > other_num._unit.first);
         }
         else {
@@ -113,7 +113,7 @@ namespace ariel {
 
     bool NumberWithUnits::operator< (const NumberWithUnits &other_num) const {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
+            long double sum = _unit.first + other_num._unit.first;
             return (_unit.first < other_num._unit.first);
         }
         else {
@@ -136,7 +136,7 @@ namespace ariel {
 
     bool NumberWithUnits::operator<= (const NumberWithUnits &other_num) const {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
+            long double sum = _unit.first + other_num._unit.first;
             return (_unit.first <= other_num._unit.first);
         }
         else {
@@ -147,7 +147,7 @@ namespace ariel {
 
     bool NumberWithUnits::operator>= (const NumberWithUnits &other_num) const {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
+            long double sum = _unit.first + other_num._unit.first;
             return (_unit.first >= other_num._unit.first);
         }
         else {
@@ -170,12 +170,12 @@ namespace ariel {
         return *this;
     }
 
-    NumberWithUnits NumberWithUnits::operator* (double factor) {
+    NumberWithUnits NumberWithUnits::operator* (long double factor) {
         _unit.first = _unit.first * factor;
         return *this;
     }
 
-    NumberWithUnits operator* (double factor, const NumberWithUnits) {
+    NumberWithUnits operator* (long double factor, const NumberWithUnits) {
         NumberWithUnits result(1, "km");
         return result;
     }
