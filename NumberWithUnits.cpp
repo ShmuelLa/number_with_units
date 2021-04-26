@@ -1,4 +1,5 @@
 #include "NumberWithUnits.hpp"
+#include <cstdlib>
 using namespace::std;
 
 namespace ariel {
@@ -25,6 +26,12 @@ namespace ariel {
                 file_name >> unit2;
                 units_map[unit1][unit2] = amount;
                 units_map[unit2][unit1] = 1/amount;
+                if (unit1 == "day") {
+                    units_map[unit1]["min"] = 24*60;
+                    units_map["min"][unit1] = 1 / (24*60);
+                    units_map[unit1]["sec"] = 24*60*60;
+                    units_map["sec"][unit1] = 1 / (24*60*60);
+                }
             }
         }
     }
@@ -61,6 +68,10 @@ namespace ariel {
             double sum = _unit.first - other_num._unit.first;
             return NumberWithUnits(sum, _unit.second);
         }
+        if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1) {
+            double sum = _unit.first - other_num._unit.first;
+            return NumberWithUnits(sum, _unit.second);   
+        }
         else {
             throw("Units does not match");
         }
@@ -78,6 +89,10 @@ namespace ariel {
             double sum = _unit.first + other_num._unit.first;
             return NumberWithUnits(sum, _unit.second);
         }
+        if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1) {
+            double sum = _unit.first + (other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
+            return NumberWithUnits(sum, _unit.second);   
+        }   
         else {
             throw("Units does not match");
         }
@@ -109,11 +124,12 @@ namespace ariel {
 
     bool NumberWithUnits::operator== (const NumberWithUnits &other_num) const {
         if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
-            return (_unit.first == other_num._unit.first);
+            return true;
         }
-        else {
-            throw("Units does not match");
+        if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1
+        &&  (abs(units_map[_unit.second][other_num._unit.second] * _unit.first - other_num._unit.first) <= epsilon
+        || abs(units_map[_unit.second][other_num._unit.second] * _unit.first - other_num._unit.first) == 0)) {
+            return true;
         }
         return false;
     }
@@ -141,14 +157,7 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator!= (const NumberWithUnits &other_num) const {
-        if (_unit.second == other_num._unit.second) {
-            double sum = _unit.first + other_num._unit.first;
-            return (_unit.first != other_num._unit.first);
-        }
-        else {
-            throw("Units does not match");
-        }
-        return false;
+        return !(*this == other_num);
     }
 
     NumberWithUnits& NumberWithUnits::operator+= (const NumberWithUnits &num) {

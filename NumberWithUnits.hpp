@@ -12,6 +12,7 @@ using std::istream;
 
 namespace ariel {
     static map <string, map <string, double>> units_map;
+    const static double epsilon = 0.00001;
 
     class NumberWithUnits {
         private:
