@@ -1,12 +1,22 @@
 #pragma once
 #include <iostream>
 #include <fstream>
+#include <map>
 #include <string>
-using namespace std;
+using std::string;
+using std::map;
+using std::pair;
+using std::ifstream;
+using std::ostream;
+using std::istream;
 
 namespace ariel {
+    static map <string, map <string, double>> units_map;
+
     class NumberWithUnits {
         private:
+            pair <double, string> _unit;
+
         public:
             NumberWithUnits(double amount, string unit_type);
 		    static void read_units(ifstream &file_name);

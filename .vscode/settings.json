@@ -5,6 +5,9 @@
         "random": "cpp",
         "functional": "cpp",
         "new": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "typeindex": "cpp",
+        "typeinfo": "cpp",
+        "ostream": "cpp"
     }
 }

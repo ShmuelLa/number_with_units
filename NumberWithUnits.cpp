@@ -1,79 +1,181 @@
 #include "NumberWithUnits.hpp"
+using namespace::std;
 
 namespace ariel {
-    NumberWithUnits::NumberWithUnits(double amount, string unit_type){}
-    void NumberWithUnits::read_units(ifstream &file_name) {}
-    NumberWithUnits operator+ (NumberWithUnits &other_num) {
-        NumberWithUnits result(1, "km");
-        return result;
+
+    NumberWithUnits::NumberWithUnits(double amount, string unit_type) {
+        if (units_map.count(unit_type) == 0) {
+            throw("This unit does not exist!");
+        }
+        else {
+            _unit.first = amount;
+            _unit.second = unit_type;
+        }
     }
-    NumberWithUnits operator- (NumberWithUnits &other_num) {
-        NumberWithUnits result(1, "km");
-        return result;
+
+    void NumberWithUnits::read_units(ifstream &file_name) {
+        string unit1, unit2;
+        double amount;
+        while (!file_name.fail() && !file_name.eof() ) {
+            file_name >> unit1;
+            if (unit1 == "1") {
+                file_name >> unit1;
+                file_name >> unit2;
+                file_name >> amount;
+                file_name >> unit2;
+                units_map[unit1][unit2] = amount;
+                units_map[unit2][unit1] = 1/amount;
+            }
+        }
     }
+
     NumberWithUnits NumberWithUnits::operator- () const {
-        NumberWithUnits result(1, "km");
+        NumberWithUnits result(_unit.first * (-1), _unit.second);
         return result;
     }
+
     NumberWithUnits & NumberWithUnits::operator-- () {
+        _unit.first = _unit.first -1;
         return *this;
     }
+
     NumberWithUnits & NumberWithUnits::operator++ () {
+        _unit.first = _unit.first +1;
         return *this;
     }
+
     NumberWithUnits NumberWithUnits::operator-- (int) {
-        return *this;
+        NumberWithUnits result(_unit.first, _unit.second);
+        _unit.first = _unit.first -1;
+        return result;
     }
+
     NumberWithUnits NumberWithUnits::operator++ (int) {
-        return *this;
+        NumberWithUnits result(_unit.first, _unit.second);
+        _unit.first = _unit.first +1;
+        return result;
     }
+
     NumberWithUnits NumberWithUnits::operator- (NumberWithUnits &other_num) {
-        NumberWithUnits result(1, "km");
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first - other_num._unit.first;
+            return NumberWithUnits(sum, _unit.second);
+        }
+        else {
+            throw("Units does not match");
+        }
+        NumberWithUnits result(_unit.first, _unit.second);
         return result;
     }
+
     NumberWithUnits NumberWithUnits::operator+ () const {
-        NumberWithUnits result(1, "km");
+        NumberWithUnits result(_unit.first, _unit.second);
         return result;
     }
+
     NumberWithUnits NumberWithUnits::operator+ (NumberWithUnits &other_num) {
-        NumberWithUnits result(1, "km");
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return NumberWithUnits(sum, _unit.second);
+        }
+        else {
+            throw("Units does not match");
+        }
+        NumberWithUnits result(_unit.first, _unit.second);
         return result;
     }
+
     bool NumberWithUnits::operator> (const NumberWithUnits &other_num) const {
-        return true;
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return (_unit.first > other_num._unit.first);
+        }
+        else {
+            throw("Units does not match");
+        }
+        return false;
     }
+
     bool NumberWithUnits::operator< (const NumberWithUnits &other_num) const {
-        return true;
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return (_unit.first < other_num._unit.first);
+        }
+        else {
+            throw("Units does not match");
+        }
+        return false;
     }
+
     bool NumberWithUnits::operator== (const NumberWithUnits &other_num) const {
-        return true;
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return (_unit.first == other_num._unit.first);
+        }
+        else {
+            throw("Units does not match");
+        }
+        return false;
     }
+
     bool NumberWithUnits::operator<= (const NumberWithUnits &other_num) const {
-        return true;
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return (_unit.first <= other_num._unit.first);
+        }
+        else {
+            throw("Units does not match");
+        }
+        return false;
     }
+
     bool NumberWithUnits::operator>= (const NumberWithUnits &other_num) const {
-        return true;
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return (_unit.first >= other_num._unit.first);
+        }
+        else {
+            throw("Units does not match");
+        }
+        return false;
     }
+
     bool NumberWithUnits::operator!= (const NumberWithUnits &other_num) const {
-        return true;
+        if (_unit.second == other_num._unit.second) {
+            double sum = _unit.first + other_num._unit.first;
+            return (_unit.first != other_num._unit.first);
+        }
+        else {
+            throw("Units does not match");
+        }
+        return false;
     }
+
     NumberWithUnits& NumberWithUnits::operator+= (const NumberWithUnits &num) {
+        _unit.first = _unit.first + num._unit.first;
         return *this;
     }
+
     NumberWithUnits& NumberWithUnits::operator-= (const NumberWithUnits &num) {
+        _unit.first = _unit.first - num._unit.first;
         return *this;
     }
+
     NumberWithUnits NumberWithUnits::operator* (double factor) {
-        NumberWithUnits result(1, "km");
-        return result;
+        _unit.first = _unit.first * factor;
+        return *this;
     }
+
     NumberWithUnits operator* (double factor, const NumberWithUnits) {
         NumberWithUnits result(1, "km");
         return result;
     }
+
     ostream& operator<< (ostream& stream, const NumberWithUnits& num) {
+        stream << num._unit.first << "[" << num._unit.second << "]";
         return stream;
     }
+
     istream& operator>> (istream& stream, const NumberWithUnits& num) {
         return stream;
     }
