@@ -75,24 +75,4 @@ int main() {
     cout << temp_input << endl;
     return 0;
     */
-    ofstream units_file;
-    units_file.open ("units.txt");
-    units_file << "1 BTC = 54926 USD" << endl;
-    units_file << "1 ETH = 2629 USD" << endl;
-    units_file << "1 DOGE = 0.27 USD" << endl;
-    units_file << "1 USD = 3.33 ILS" << endl;
-    units_file << "1 shawarma = 2 falafel" << endl;
-    units_file.close(); 
-    ifstream units_file_stream{"units.txt"};
-    NumberWithUnits::read_units(units_file_stream);
-    cout << "[̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅]" << endl << endl; 
-    cout << "( ͡° ͜ʖ ͡°) Welcome to the Crypto Trading Unit! ( ͡° ͜ʖ ͡°)" << endl << endl;
-    cout << "[̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅] [̲̅$̲̅(̲̅5̲̅)̲̅$̲̅]" << endl << endl << endl << endl;
-    cout << "Please Trade With Us   (づ｡◕‿‿◕｡)づ    please...    " << endl << endl;
-    istringstream iss{" 1[BTC] 1 [ETH] 1 [DOGE ] 1 [ USD ] 1[ILS] 1[shawarma] 1[falafel]"};
-    NumberWithUnits a(7, "falafel"), b(7, "falafel"), c(7, "falafel"), d(7, "falafel"), e(7, "falafel"), f(7, "falafel"), g(7, "falafel");
-    iss >> a >> b >> c >> d >> e >> f >> g;
-    cout << a << " " << b << " " << c << " " << d << " " << e << " " << f << " " << g << endl;
-    cout << "In order to supercharge any currency, you can add just one BTC to it! This is amazing!! " << endl << endl;
-    cout << " ლ(´ڡ`ლ) " << b+a << " " << c+a << " " << d+a << " " << e+a << "    ლ(´ڡ`ლ) " << endl;
 }
