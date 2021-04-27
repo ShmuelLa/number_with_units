@@ -4,7 +4,7 @@ using namespace::std;
 
 namespace ariel {
 
-    NumberWithUnits::NumberWithUnits(long double amount, string unit_type) {
+    NumberWithUnits::NumberWithUnits(double amount, string unit_type) {
         if (units_map.count(unit_type) == 0) {
             throw("This unit does not exist!");
         }
@@ -16,7 +16,7 @@ namespace ariel {
 
     void NumberWithUnits::read_units(ifstream &file_name) {
         string unit1, unit2;
-        long double amount;
+        double amount;
         while (!file_name.fail() && !file_name.eof() ) {
             file_name >> unit1;
             if (unit1 == "1") {
@@ -26,11 +26,13 @@ namespace ariel {
                 file_name >> unit2;
                 units_map[unit1][unit2] = amount;
                 units_map[unit2][unit1] = 1/amount;
-                if (unit1 == "day") {
-                    units_map[unit1]["min"] = 24*60;
-                    units_map["min"][unit1] = 1 / (24*60);
-                    units_map[unit1]["sec"] = 24*60*60;
-                    units_map["sec"][unit1] = 1 / (24*60*60);
+                for (auto unit : units_map[unit1]) {
+                    units_map[unit.first][unit2] = amount / unit.second;
+                    units_map[unit2][unit.first] = unit.second / amount;
+                }
+                for (auto unit : units_map[unit2]) {
+                    units_map[unit.first][unit1] = (1/amount) / unit.second;
+                    units_map[unit1][unit.first] = unit.second / (1/amount);
                 }
             }
         }
@@ -64,12 +66,8 @@ namespace ariel {
     }
 
     NumberWithUnits NumberWithUnits::operator- (NumberWithUnits &other_num) {
-        if (_unit.second == other_num._unit.second) {
-            long double sum = _unit.first - other_num._unit.first;
-            return NumberWithUnits(sum, _unit.second);
-        }
-        if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1) {
-            long double sum = _unit.first - other_num._unit.first;
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            double sum = _unit.first - (other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
             return NumberWithUnits(sum, _unit.second);   
         }
         else {
@@ -85,14 +83,10 @@ namespace ariel {
     }
 
     NumberWithUnits NumberWithUnits::operator+ (NumberWithUnits &other_num) {
-        if (_unit.second == other_num._unit.second) {
-            long double sum = _unit.first + other_num._unit.first;
-            return NumberWithUnits(sum, _unit.second);
-        }
-        if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1) {
-            long double sum = _unit.first + (other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            double sum = _unit.first + (other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
             return NumberWithUnits(sum, _unit.second);   
-        }   
+        }
         else {
             throw("Units does not match");
         }
@@ -102,9 +96,13 @@ namespace ariel {
 
     bool NumberWithUnits::operator> (const NumberWithUnits &other_num) const {
         if (_unit.second == other_num._unit.second) {
-            long double sum = _unit.first + other_num._unit.first;
+            double sum = _unit.first + other_num._unit.first;
             return (_unit.first > other_num._unit.first);
         }
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            return (units_map[_unit.second][other_num._unit.second] * _unit.first > other_num._unit.first
+                || (units_map[_unit.second][other_num._unit.second] * _unit.first - other_num._unit.first) > epsilon);
+        }   
         else {
             throw("Units does not match");
         }
@@ -112,10 +110,9 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator< (const NumberWithUnits &other_num) const {
-        if (_unit.second == other_num._unit.second) {
-            long double sum = _unit.first + other_num._unit.first;
-            return (_unit.first < other_num._unit.first);
-        }
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            return (this->_unit.first < other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
+        }   
         else {
             throw("Units does not match");
         }
@@ -123,22 +120,16 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator== (const NumberWithUnits &other_num) const {
-        if (_unit.second == other_num._unit.second) {
-            return true;
-        }
-        if (units_map[_unit.second][other_num._unit.second] * units_map[other_num._unit.second][_unit.second] == 1
-        &&  (abs(units_map[_unit.second][other_num._unit.second] * _unit.first - other_num._unit.first) <= epsilon
-        || abs(units_map[_unit.second][other_num._unit.second] * _unit.first - other_num._unit.first) == 0)) {
-            return true;
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            return (abs(_unit.first - other_num._unit.first * units_map[other_num._unit.second][_unit.second]) <= epsilon);
         }
         return false;
     }
 
     bool NumberWithUnits::operator<= (const NumberWithUnits &other_num) const {
-        if (_unit.second == other_num._unit.second) {
-            long double sum = _unit.first + other_num._unit.first;
-            return (_unit.first <= other_num._unit.first);
-        }
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            return (this->_unit.first <= other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
+        }   
         else {
             throw("Units does not match");
         }
@@ -146,10 +137,9 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator>= (const NumberWithUnits &other_num) const {
-        if (_unit.second == other_num._unit.second) {
-            long double sum = _unit.first + other_num._unit.first;
-            return (_unit.first >= other_num._unit.first);
-        }
+        if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
+            return (this->_unit.first >= other_num._unit.first * units_map[other_num._unit.second][_unit.second]);
+        }   
         else {
             throw("Units does not match");
         }
@@ -161,23 +151,47 @@ namespace ariel {
     }
 
     NumberWithUnits& NumberWithUnits::operator+= (const NumberWithUnits &num) {
-        _unit.first = _unit.first + num._unit.first;
+        if (_unit.second == num._unit.second) {
+            _unit.first += num._unit.first;
+            return *this;
+        }
+        if (units_map[_unit.second].count(num._unit.second) > 0 && units_map[num._unit.second].count(_unit.second) > 0) {
+            if (units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] < epsilon
+                || units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] == 1) {
+                _unit.first += (num._unit.first * units_map[num._unit.second][_unit.second]);
+                return *this; 
+            }
+        }
+        else {
+            throw("Units does not match");
+        }
         return *this;
     }
 
     NumberWithUnits& NumberWithUnits::operator-= (const NumberWithUnits &num) {
-        _unit.first = _unit.first - num._unit.first;
+        if (_unit.second == num._unit.second) {
+            _unit.first -= num._unit.first;
+            return *this;
+        }
+        if (units_map[_unit.second].count(num._unit.second) > 0 && units_map[num._unit.second].count(_unit.second) > 0) {
+            if (units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] < epsilon
+                || units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] == 1) {
+                _unit.first -= (num._unit.first * units_map[num._unit.second][_unit.second]);
+                return *this; 
+            }
+        }
+        else {
+            throw("Units does not match");
+        }
         return *this;
     }
 
-    NumberWithUnits NumberWithUnits::operator* (long double factor) {
-        _unit.first = _unit.first * factor;
-        return *this;
+    NumberWithUnits NumberWithUnits::operator* (double factor) const {
+        return NumberWithUnits(_unit.first * factor, this->_unit.second);
     }
 
-    NumberWithUnits operator* (long double factor, const NumberWithUnits) {
-        NumberWithUnits result(1, "km");
-        return result;
+    NumberWithUnits operator* (double factor, const NumberWithUnits &other_num) {
+        return NumberWithUnits(other_num * factor);
     }
 
     ostream& operator<< (ostream& stream, const NumberWithUnits& num) {
@@ -186,6 +200,9 @@ namespace ariel {
     }
 
     istream& operator>> (istream& stream, const NumberWithUnits& num) {
+        double in_num;
+        string in_str;
+        stream >> in_num >> in_str;
         return stream;
     }
 }
