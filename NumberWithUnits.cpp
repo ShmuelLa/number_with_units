@@ -1,5 +1,4 @@
 #include "NumberWithUnits.hpp"
-#include <cstdlib>
 #include <sstream>
 using namespace::std;
 
@@ -87,9 +86,6 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator> (const NumberWithUnits &other_num) const {
-        if (_unit.second == other_num._unit.second) {
-            return (_unit.first > other_num._unit.first);
-        }
         if (units_map[_unit.second].count(other_num._unit.second) > 0 && units_map[other_num._unit.second].count(_unit.second) > 0) {
             return (units_map[_unit.second][other_num._unit.second] * _unit.first > other_num._unit.first
                 || (units_map[_unit.second][other_num._unit.second] * _unit.first - other_num._unit.first) > epsilon);
@@ -127,39 +123,19 @@ namespace ariel {
     }
 
     NumberWithUnits& NumberWithUnits::operator+= (const NumberWithUnits &num) {
-        if (_unit.second == num._unit.second) {
-            _unit.first += num._unit.first;
-            return *this;
-        }
         if (units_map[_unit.second].count(num._unit.second) > 0 && units_map[num._unit.second].count(_unit.second) > 0) {
-            if (units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] < epsilon
-                || units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] == 1) {
-                _unit.first += (num._unit.first * units_map[num._unit.second][_unit.second]);
-                return *this; 
-            }
+            _unit.first += (num._unit.first * units_map[num._unit.second][_unit.second]);
+            return *this; 
         }
-        else {
-            throw("Units does not match");
-        }
-        return *this;
+        throw("Units does not match");
     }
 
     NumberWithUnits& NumberWithUnits::operator-= (const NumberWithUnits &num) {
-        if (_unit.second == num._unit.second) {
-            _unit.first -= num._unit.first;
-            return *this;
-        }
         if (units_map[_unit.second].count(num._unit.second) > 0 && units_map[num._unit.second].count(_unit.second) > 0) {
-            if (units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] < epsilon
-                || units_map[_unit.second][num._unit.second] * units_map[num._unit.second][_unit.second] == 1) {
-                _unit.first -= (num._unit.first * units_map[num._unit.second][_unit.second]);
-                return *this; 
-            }
+            _unit.first -= (num._unit.first * units_map[num._unit.second][_unit.second]);
+            return *this; 
         }
-        else {
-            throw("Units does not match");
-        }
-        return *this;
+        throw("Units does not match");
     }
 
     NumberWithUnits NumberWithUnits::operator* (double factor) const {
@@ -177,61 +153,21 @@ namespace ariel {
 
     istream& operator>> (istream& stream, NumberWithUnits &num) {
         double in_num = 0;
-        string in_str, result_str, bracket, bracket2;
-        stream >> in_num >> bracket;
-        if (bracket[0] == '[' && bracket[bracket.size()-1] == ']') {
-            for (string::size_type i=0; i < bracket.size(); i++) {
-                if (bracket[i]  != '[' && bracket[i]  != ']' && bracket[i]  != ' ') {
-                result_str += bracket[i];
-                }
+        string result;
+        char tmp_char = ' ';
+        stream >> in_num;
+        stream >> tmp_char ;
+        while (tmp_char != ']') {
+            if (tmp_char != '[') {
+                result.push_back(tmp_char);
             }
-            if (units_map.count(result_str) > 0) {
-                num._unit.first = in_num;
-                num._unit.second = result_str;
-                return stream;
-            }
+            stream >> tmp_char;
         }
-        else if (bracket[0] == '[' && bracket[bracket.size()-1] != ']') {
-            stream >> in_str;
-            if (in_str == "]") {
-                for (string::size_type i=0; i < bracket.size(); i++) {
-                    if (bracket[i]  != '[' && bracket[i]  != ']' && bracket[i]  != ' ') {
-                        result_str += bracket[i];
-                    }
-                }
-                if (units_map.count(result_str) > 0) {
-                    num._unit.first = in_num;
-                    num._unit.second = result_str;
-                    return stream;
-                }
-            }
-            else if (units_map.count(in_str) > 0) {
-                stream >> bracket2;
-                for (string::size_type i=0; i < in_str.size(); i++) {
-                    if (in_str[i]  != '[' && in_str[i]  != ']' && in_str[i]  != ' ') {
-                        result_str += in_str[i];
-                    }
-                }
-                if (units_map.count(result_str) > 0) {
-                    num._unit.first = in_num;
-                    num._unit.second = result_str;
-                    return stream;
-                }
-            }
+        if (units_map.count(result) > 0) {
+            num._unit.first = in_num;
+            num._unit.second = result;
+            return stream;
         }
-        else {
-            stream >> bracket2;
-            for (string::size_type i=0; i < in_str.size(); i++) {
-                if (in_str[i]  != '[' && in_str[i]  != ']' && in_str[i]  != ' ') {
-                    result_str += in_str[i];
-                }
-            }
-            if (units_map.count(result_str) > 0) {
-                num._unit.first = in_num;
-                num._unit.second = result_str;
-                return stream;
-            }
-        }
-        throw("Wrong Input");
+        throw("Wrong Unit");
     }
 }

@@ -17,6 +17,16 @@
         "cstddef": "cpp",
         "iomanip": "cpp",
         "istream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "cstdlib": "cpp",
+        "any": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "memory_resource": "cpp",
+        "scoped_allocator": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "variant": "cpp"
     }
 }
