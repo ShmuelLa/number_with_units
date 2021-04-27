@@ -10,6 +10,13 @@
         "typeinfo": "cpp",
         "ostream": "cpp",
         "ratio": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "*.tcc": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "cstddef": "cpp",
+        "iomanip": "cpp",
+        "istream": "cpp",
+        "regex": "cpp"
     }
 }

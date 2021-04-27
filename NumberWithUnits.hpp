@@ -19,16 +19,16 @@ namespace ariel {
             pair <double, string> _unit;
 
         public:
-            NumberWithUnits(double amount, const string unit_type);
+            NumberWithUnits(double amount, const string &unit_type);
 		    static void read_units(ifstream &file_name);
             NumberWithUnits operator- () const;
+            NumberWithUnits operator+ (const NumberWithUnits &other_num) const;
             NumberWithUnits operator+ () const;
             NumberWithUnits & operator-- ();
             NumberWithUnits & operator++ ();
             NumberWithUnits operator-- (int);
             NumberWithUnits operator++ (int);
-            NumberWithUnits operator+ (NumberWithUnits &other_num);
-            NumberWithUnits operator- (NumberWithUnits &other_num);
+            NumberWithUnits operator- (const NumberWithUnits &other_num) const;
             bool operator> (const NumberWithUnits &other_num) const;
             bool operator< (const NumberWithUnits &other_num) const;
             bool operator== (const NumberWithUnits &other_num) const;

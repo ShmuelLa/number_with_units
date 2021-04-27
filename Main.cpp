@@ -56,22 +56,23 @@ int test1() {
 }
 
 int main() {
+    /**
     test1();
     ifstream in_file("units.txt");
     NumberWithUnits::read_units(in_file);
-    NumberWithUnits sec1(1,"sec");
-    NumberWithUnits min1(24*60,"min");
-    NumberWithUnits hour1(1,"hour");
-    NumberWithUnits day1(1,"day");
-    cout << min1 << endl;
-    cout << day1 << endl;
-    cout << (day1==min1) << endl;
-    cout << (day1>=min1) << endl;
-    cout << (day1<=min1) << endl;
-    cout << (min1==day1) << endl;
-    cout << (min1>=day1) << endl;
-    cout << (min1<=day1) << endl;
-    istringstream input = istringstream("10[kg]");
-    input >> day1;
+    istringstream input = istringstream("20 [ g ]");
+    istringstream input2 = istringstream(" 900 [ton] ");
+    istringstream iss3{" 8 [   sec     ]   -1 [ton ] 29.7 [min ]"};
+    NumberWithUnits a(7, "ILS");
+    NumberWithUnits b(7, "ILS");
+    NumberWithUnits c(7, "ILS");
+    iss3 >> a >> b >> c;
+    NumberWithUnits temp_input(7, "ILS");
+    cout << temp_input << endl;
+    input >> temp_input;
+    cout << temp_input << endl;
+    input2 >> temp_input;
+    cout << temp_input << endl;
     return 0;
+    */
 }
