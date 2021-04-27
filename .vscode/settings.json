@@ -9,6 +9,7 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "ostream": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "sstream": "cpp"
     }
 }

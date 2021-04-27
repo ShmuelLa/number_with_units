@@ -1,10 +1,11 @@
 #include "NumberWithUnits.hpp"
 #include <cstdlib>
+#include <sstream>
 using namespace::std;
 
 namespace ariel {
 
-    NumberWithUnits::NumberWithUnits(double amount, string unit_type) {
+    NumberWithUnits::NumberWithUnits(double amount, const string unit_type) {
         if (units_map.count(unit_type) == 0) {
             throw("This unit does not exist!");
         }
@@ -194,15 +195,22 @@ namespace ariel {
         return NumberWithUnits(other_num * factor);
     }
 
-    ostream& operator<< (ostream& stream, const NumberWithUnits& num) {
+    ostream& operator<< (ostream& stream, const NumberWithUnits &num) {
         stream << num._unit.first << "[" << num._unit.second << "]";
         return stream;
     }
 
-    istream& operator>> (istream& stream, const NumberWithUnits& num) {
-        double in_num;
-        string in_str;
+    istream& operator>> (istream& stream, NumberWithUnits &num) {
+        double in_num = 0;
+        string in_str, result_str;
         stream >> in_num >> in_str;
+        for (string::size_type i=0; i < in_str.size(); i++) {
+            if (in_str[i]  != '[' && in_str[i]  != ']' ) {
+                result_str += in_str[i];
+            }
+        }
+        num._unit.first = in_num;
+        num._unit.second = result_str;
         return stream;
     }
 }

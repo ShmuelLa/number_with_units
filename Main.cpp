@@ -1,4 +1,5 @@
 #include "NumberWithUnits.hpp"
+#include <sstream>
 using namespace::std;
 using namespace::ariel;
 
@@ -70,5 +71,7 @@ int main() {
     cout << (min1==day1) << endl;
     cout << (min1>=day1) << endl;
     cout << (min1<=day1) << endl;
+    istringstream input = istringstream("10[kg]");
+    input >> day1;
     return 0;
 }
