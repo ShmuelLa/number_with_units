@@ -12,9 +12,9 @@ using namespace::ariel;
 void init_table_file(){
     ofstream myfile;
     myfile.open ("shmuel_units.txt");
-    myfile << "1 ILS = 3.252 USD" << endl;
-    myfile << "1 ILS = 4.5109 GBP" << endl;
-    myfile << "1 ILS = 3.9054 EURO" << endl;
+    myfile << "1 USD = 3.252 ILS" << endl;
+    myfile << "1 GBP = 4.5109 ILS" << endl;
+    myfile << "1 EURO = 3.9054 ILS" << endl;
     myfile << "1 ILS = 12904 RIAL" << endl;
     myfile << "1 CHUCK_NORRIS = 1 CHUCK_NORRIS" << endl;
     myfile << "1 SHEEP = 3 WOOL" << endl;
@@ -24,18 +24,17 @@ void init_table_file(){
 
 void print_currency_coparisons(NumberWithUnits &a, NumberWithUnits &b, NumberWithUnits &c, NumberWithUnits &d, NumberWithUnits &e) {
     cout << "Comparing currencies from left to right while first left is the indicator" << endl
-        << "We will compare by adding and increasing one from the left currency to all the others" << endl
-        << "Current: " << a << endl;
-    a+=b;
-    cout a;
-
+        << "We will compare by increasing and decresing the left currency from all the others" << endl
+        << "Current: " << a << endl << "Incrementing..." << endl
+        << b+a << " " << c+a << " " << d+a << " " << e+a << endl << "Decrementing...." << endl
+        << b-a << " " << c-a << " " << d-a << " " << e-a << endl;
 }
 
 int main() {
     init_table_file();
     ifstream in_file("shmuel_units.txt");
     NumberWithUnits::read_units(in_file);
-    istringstream iss{" 100 [ ILS ]  100 [USD ] 100 [ GBP] 100 [ EURO ] 100 [ RIAL] 1 [SHEEP] 1[GOAT]"};
+    istringstream iss{" 1 [ ILS ]  1 [USD ] 1 [ GBP] 1 [ EURO ] 1 [ RIAL] 1 [SHEEP] 1[GOAT]"};
     cout << "We initialize everything with chuck CHUCK_NORRIS because everything starts with chuck norris" << endl;
     std::cin.ignore();
     NumberWithUnits ILS(1, "CHUCK_NORRIS");
@@ -51,7 +50,13 @@ int main() {
     std::cin.ignore();
     cout << " " << ILS << " " << USD << " " << GBP << " " << EURO << " " << RIAL << " " << SHEEP << " " << GOAT << endl;
     std::cin.ignore();
-    cout << "Now we can compare currencies...." << endl << endl << endl;
+    cout << "Now we can compare currencies.... starting with ILS" << endl << endl << endl;
     print_currency_coparisons(ILS, USD, GBP, EURO, RIAL);
+    cout << "Now the GBP" << endl << endl;
+    std::cin.ignore();
+    print_currency_coparisons(GBP, USD, ILS, EURO, RIAL);
+    cout << "Now the Iranian Rial.. It's amazing what some sanctions can do..." << endl << endl;
+    std::cin.ignore();
+    print_currency_coparisons(RIAL, USD, ILS, EURO, GBP);
     return 0;
 }
