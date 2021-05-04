@@ -3,76 +3,55 @@
 using namespace::std;
 using namespace::ariel;
 
-int test1() {
-    map <string, map <string, double> > units_map2;
-    string unit1, unit2;
-    double amount;
-    ifstream in_file("units.txt");
+/**
+ * @brief initializes some currency values
+ * source: https://www.boi.org.il/he/markets/ExchangeRates/Pages/Default.aspx
+ * sheep/lamb: https://ec.europa.eu/info/sites/default/files/food-farming-fisheries/farming/documents/sheep-meat-dashboard_en.pdf
+ * 
+ */
+void init_table_file(){
+    ofstream myfile;
+    myfile.open ("shmuel_units.txt");
+    myfile << "1 ILS = 3.252 USD" << endl;
+    myfile << "1 ILS = 4.5109 GBP" << endl;
+    myfile << "1 ILS = 3.9054 EURO" << endl;
+    myfile << "1 ILS = 12904 RIAL" << endl;
+    myfile << "1 CHUCK_NORRIS = 1 CHUCK_NORRIS" << endl;
+    myfile << "1 SHEEP = 3 WOOL" << endl;
+    myfile << "1 GOAT = 2 SHEEP";
+    myfile.close(); 
+}
 
-    if (!in_file) {
-        perror("Error opening file");
-    }
-    while (!in_file.fail() && !in_file.eof() ) {
-        in_file >> unit1;
-        if (unit1 == "1") {
-            in_file >> unit1;
-            in_file >> unit2;
-            in_file >> amount;
-            in_file >> unit2;
-            units_map2[unit1][unit2] = amount;
-            units_map2[unit2][unit1] = 1/amount;
-            for (auto unit : units_map2[unit1]) {
-                units_map2[unit.first][unit2] = amount / unit.second;
-                units_map2[unit2][unit.first] = unit.second / amount;
-            }
-            for (auto unit : units_map2[unit2]) {
-                units_map2[unit.first][unit1] = (1/amount) / unit.second;
-                units_map2[unit1][unit.first] = unit.second / (1/amount);
-            }
-        }
-    }
-    cout << "==========================" << endl;
-    for (map <string, map<string, double>>::iterator it = units_map2.begin(); it != units_map2.end(); ++it) {
-        cout << it->first;
-        map <string,double> internal_map = it->second;
-        for (map<string, double>::iterator it2 = internal_map.begin(); it2 != internal_map.end(); ++it2) {
-            cout << " <" << it2->first << " , " << it2->second << " >" << endl;
-        }
-    }
-    cout << "==========================" << endl;
-    /**
-    for (map <string, map<string, double>>::iterator it = units_map2.begin(); it != units_map2.end(); ++it) {
-        map <string,double> internal_map = it->second;
-        for (map<string, double>::iterator it2 = internal_map.begin(); it2 != internal_map.end(); ++it2) {
-            for (map <string, map<string, double>>::iterator it3 = units_map2.begin(); it3 != units_map2.end(); ++it3) {
-                if (it3->first == it2->first) {
-                    cout << it3->first << "  " << it2->second << "| " << it2->first << " " << endl;
-                }
-            }
-        }
-    }
-    */
-    return 0;
+void print_currency_coparisons(NumberWithUnits &a, NumberWithUnits &b, NumberWithUnits &c, NumberWithUnits &d, NumberWithUnits &e) {
+    cout << "Comparing currencies from left to right while first left is the indicator" << endl
+        << "We will compare by adding and increasing one from the left currency to all the others" << endl
+        << "Current: " << a << endl;
+    a+=b;
+    cout a;
+
 }
 
 int main() {
-    /**
-    test1();
-    ifstream in_file("units.txt");
+    init_table_file();
+    ifstream in_file("shmuel_units.txt");
     NumberWithUnits::read_units(in_file);
-    istringstream input = istringstream("20 [ g ]");
-    istringstream input2 = istringstream(" 900 [ton] ");
-    istringstream iss3{" 8 [   sec     ]   -1 [ton ] 29.7 [min ]"};
-    NumberWithUnits a(7, "falafel");
-    NumberWithUnits b(7, "ILS");
-    NumberWithUnits c(7, "ILS");
-    iss3 >> a >> b >> c;
-    NumberWithUnits temp_input(7, "ILS");
-    cout << temp_input << endl;
-    input >> temp_input;
-    cout << temp_input << endl;
-    input2 >> temp_input;
-    cout << temp_input << endl;
+    istringstream iss{" 100 [ ILS ]  100 [USD ] 100 [ GBP] 100 [ EURO ] 100 [ RIAL] 1 [SHEEP] 1[GOAT]"};
+    cout << "We initialize everything with chuck CHUCK_NORRIS because everything starts with chuck norris" << endl;
+    std::cin.ignore();
+    NumberWithUnits ILS(1, "CHUCK_NORRIS");
+    NumberWithUnits USD(1, "CHUCK_NORRIS");
+    NumberWithUnits GBP(1, "CHUCK_NORRIS");
+    NumberWithUnits EURO(1, "CHUCK_NORRIS");
+    NumberWithUnits RIAL(1, "CHUCK_NORRIS");
+    NumberWithUnits SHEEP(1, "CHUCK_NORRIS");
+    NumberWithUnits GOAT(1, "CHUCK_NORRIS");
+    cout << " " << ILS << " " << USD << " " << GBP << " " << EURO << " " << RIAL << " " << SHEEP << " " << GOAT << endl;
+    iss >> ILS >> USD >> GBP >> EURO >> RIAL >> SHEEP >> GOAT;
+    cout << "Now we will overwrite accordingly" << endl;
+    std::cin.ignore();
+    cout << " " << ILS << " " << USD << " " << GBP << " " << EURO << " " << RIAL << " " << SHEEP << " " << GOAT << endl;
+    std::cin.ignore();
+    cout << "Now we can compare currencies...." << endl << endl << endl;
+    print_currency_coparisons(ILS, USD, GBP, EURO, RIAL);
     return 0;
-    */
 }

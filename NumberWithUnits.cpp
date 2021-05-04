@@ -1,5 +1,4 @@
 #include "NumberWithUnits.hpp"
-#include <sstream>
 using namespace::std;
 
 namespace ariel {
@@ -31,22 +30,19 @@ namespace ariel {
         string unit1, unit2;
         double amount = 0;
         while (!file_name.fail() && !file_name.eof() ) {
-            file_name >> unit1;
-            if (unit1 == "1") {
-                file_name >> unit1;
-                file_name >> unit2;
-                file_name >> amount;
-                file_name >> unit2;
-                units_map[unit1][unit2] = amount;
-                units_map[unit2][unit1] = 1/amount;
-                for (auto const &unit : units_map[unit1]) {
-                    units_map[unit.first][unit2] = amount / unit.second;
-                    units_map[unit2][unit.first] = unit.second / amount;
-                }
-                for (auto const &unit : units_map[unit2]) {
-                    units_map[unit.first][unit1] = (1/amount) / unit.second;
-                    units_map[unit1][unit.first] = unit.second / (1/amount);
-                }
+            file_name >> unit1 >> unit1;
+            file_name >> unit2;
+            file_name >> amount;
+            file_name >> unit2;
+            units_map[unit1][unit2] = amount;
+            units_map[unit2][unit1] = 1/amount;
+            for (auto const &unit : units_map[unit1]) {
+                units_map[unit.first][unit2] = amount / unit.second;
+                units_map[unit2][unit.first] = unit.second / amount;
+            }
+            for (auto const &unit : units_map[unit2]) {
+                units_map[unit.first][unit1] = (1/amount) / unit.second;
+                units_map[unit1][unit.first] = unit.second / (1/amount);
             }
         }
     }
